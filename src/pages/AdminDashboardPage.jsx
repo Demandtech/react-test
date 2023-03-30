@@ -8,7 +8,7 @@ import MkdSDK from '../utils/MkdSDK'
 const AdminDashboardPage = () => {
   const { dispatch } = React.useContext(AuthContext)
   const [video, setVideo] = useState([])
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [numOfPage, setNumPage] = useState(0)
   console.log(video)
   const now = new Date()
@@ -28,10 +28,15 @@ const AdminDashboardPage = () => {
     dispatch({ type: 'LOGOUT' })
   }
 
+  const paginate = () => {
+    if (numOfPage > page) {
+      setPage((oldPage) => oldPage + 1)
+    }
+  }
+
   useEffect(() => {
-    const sdk = new MkdSDK()
     const token = localStorage.getItem('token')
-    const getVideodata = async () => {
+    const getVideodata = async (page) => {
       const response = await fetch(
         'https://reacttask.mkdlabs.com/v1/api/rest/video/PAGINATE',
         {
@@ -44,20 +49,19 @@ const AdminDashboardPage = () => {
           },
           body: JSON.stringify({
             payload: {},
-            page: 1,
+            page: page,
             limit: 10,
           }),
         }
       )
       const video = await response.json()
       setVideo(video.list)
-      setPage(video.page)
       setNumPage(video.num_pages)
       console.log(video)
     }
 
-    getVideodata()
-  }, [])
+    getVideodata(page)
+  }, [page])
 
   return (
     <div className='container bg-black px-10 min-h-screen font-sans'>
@@ -113,8 +117,10 @@ const AdminDashboardPage = () => {
               </div>
             )
           })}
-          <button onClick={()=> setPage(oldPage=> oldPage + 1)}>Next</button>
         </div>
+        <button className='text-white' onClick={() => paginate()}>
+          Next
+        </button>
       </main>
     </div>
   )
