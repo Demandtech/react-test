@@ -1,11 +1,12 @@
 import React from 'react'
 import {FaArrowUp} from 'react-icons/fa'
 
+
 const Card = ({ image, avatar, author, likes, title, index }) => {
   return (
     <div
       className='mb-2 p-2 rounded flex '
-      style={{ border: '1px solid rgba(255, 255, 255, 0.12)' }}
+      style={{ border: '1px solid rgba(255, 255, 255, 0.12)'}}
     >
       <div className='flex w-1/3 items-center mr-24'>
         <span className='text-[#666666] p-3'>{index + 1}</span>

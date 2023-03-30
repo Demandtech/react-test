@@ -34,9 +34,6 @@ export default function MkdSDK() {
 
       const jsonLogin = await loginResult.json()
 
-      if (this.loginResult.status !== 200) {
-        throw new Error(jsonLogin.message)
-      }
       localStorage.setItem('token', jsonLogin.token)
     } catch (error) {
       console.log(error)
@@ -63,6 +60,7 @@ export default function MkdSDK() {
 
     switch (method) {
       case 'GET':
+        
         const getResult = await fetch(
           this._baseurl + `/v1/api/rest/${this._table}/GET`,
           {
@@ -71,8 +69,9 @@ export default function MkdSDK() {
             body: JSON.stringify(payload),
           }
         )
+       
         const jsonGet = await getResult.json()
-
+       console.log(this._baseurl + `/v1/api/rest/${this._table}/GET`)
         if (getResult.status === 401) {
           throw new Error(jsonGet.message)
         }
@@ -106,6 +105,7 @@ export default function MkdSDK() {
         if (paginateResult.status === 403) {
           throw new Error(jsonPaginate.message)
         }
+        console.log(jsonPaginate)
         return jsonPaginate
       default:
         break
