@@ -4,13 +4,11 @@ import Card from '../components/Card'
 import { cardData } from '../utils/utils'
 import { AuthContext } from '../authContext'
 import MkdSDK from '../utils/MkdSDK'
+import { useNavigate } from 'react-router'
 
 const AdminDashboardPage = () => {
-  const { dispatch } = React.useContext(AuthContext)
-  const [video, setVideo] = useState([])
-  const [page, setPage] = useState(1)
-  const [numOfPage, setNumPage] = useState(0)
-  console.log(video)
+  const { dispatch , state} = React.useContext(AuthContext)
+  const navigate = useNavigate()
   const now = new Date()
   const date = now.toLocaleString('en-US', {
     month: 'short',
@@ -24,45 +22,11 @@ const AdminDashboardPage = () => {
     hour12: true,
   })
 
-  const handleLogout = () => {
-    dispatch({ type: 'LOGOUT' })
-  }
-
-  const paginate = () => {
-    if (numOfPage > page) {
-      setPage((oldPage) => oldPage + 1)
-    }
-  }
-
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    const getVideodata = async (page) => {
-      const response = await fetch(
-        'https://reacttask.mkdlabs.com/v1/api/rest/video/PAGINATE',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-project':
-              'cmVhY3R0YXNrOmQ5aGVkeWN5djZwN3p3OHhpMzR0OWJtdHNqc2lneTV0Nw==',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            payload: {},
-            page: page,
-            limit: 10,
-          }),
-        }
-      )
-      const video = await response.json()
-      setVideo(video.list)
-      setNumPage(video.num_pages)
-      console.log(video)
-    }
-
-    getVideodata(page)
-  }, [page])
-
+   const handleLogout = () => {
+     dispatch({ type: 'LOGOUT' })
+     navigate('/')
+   }
+  
   return (
     <div className='container bg-black px-10 min-h-screen font-sans'>
       <header className=' mb-[4rem] flex items-center justify-between'>
@@ -108,7 +72,7 @@ const AdminDashboardPage = () => {
           </div>
         </div>
 
-        <div className='pagination flex'>
+        {/* <div className='pagination flex'>
           {video.map((data, index) => {
             return (
               <div key={index}>
@@ -120,7 +84,7 @@ const AdminDashboardPage = () => {
         </div>
         <button className='text-white' onClick={() => paginate()}>
           Next
-        </button>
+        </button> */}
       </main>
     </div>
   )

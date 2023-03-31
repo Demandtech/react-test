@@ -31,10 +31,10 @@ export default function MkdSDK() {
         headers: header,
         body: JSON.stringify(payload),
       })
-
       const jsonLogin = await loginResult.json()
-
       localStorage.setItem('token', jsonLogin.token)
+      localStorage.setItem('role', jsonLogin.role)
+      return jsonLogin
     } catch (error) {
       console.log(error)
     }
@@ -60,7 +60,6 @@ export default function MkdSDK() {
 
     switch (method) {
       case 'GET':
-        
         const getResult = await fetch(
           this._baseurl + `/v1/api/rest/${this._table}/GET`,
           {
@@ -69,9 +68,8 @@ export default function MkdSDK() {
             body: JSON.stringify(payload),
           }
         )
-       
+
         const jsonGet = await getResult.json()
-       console.log(this._baseurl + `/v1/api/rest/${this._table}/GET`)
         if (getResult.status === 401) {
           throw new Error(jsonGet.message)
         }
@@ -105,7 +103,6 @@ export default function MkdSDK() {
         if (paginateResult.status === 403) {
           throw new Error(jsonPaginate.message)
         }
-        console.log(jsonPaginate)
         return jsonPaginate
       default:
         break
@@ -114,33 +111,23 @@ export default function MkdSDK() {
 
   this.check = async function (role) {
     //TODO
-    const token = localStorage.getItem('token')
-
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-project':
-          'cmVhY3R0YXNrOmQ5aGVkeWN5djZwN3p3OHhpMzR0OWJtdHNqc2lneTV0Nw==',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({role:role})
+    try {
+      const response = await fetch(this._baseurl + '/v2/api/lambda/check', {
+        method: 'POST',
+        headers: {
+          'x-project':
+            'cmVhY3R0YXNrOmQ5aGVkeWN5djZwN3p3OHhpMzR0OWJtdHNqc2lneTV0Nw==',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+        body: JSON.stringify({ role: role }),
+      })
+      const checkData = await response.json()
+      return checkData
+    } catch (err) {
+      console.log(err)
     }
 
-    try{
-     const response = await fetch(this.baseUrl + '/v2/api/lambda/check', requestOptions)
-     if(response.status === 200){
-      console.log("Token is valid");
-      return true
-     }else{
-      console.log("Token is Invalid")
-      return false
-     }
-    }catch(error){
-     console.error("Error checking token:",error)
-     return false
-    }
+    return this
   }
-
-  return this
 }
