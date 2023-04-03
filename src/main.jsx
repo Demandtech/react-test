@@ -31,11 +31,12 @@ function renderRoutes(role) {
 
 function Main() {
   const { state } = React.useContext(AuthContext)
+  
   return (
     <div className='h-full font-sans'>
       <div className='flex w-full'>
         <div className='w-full'>
-          <div className='page-wrapper w-full py-10 px-5 bg-[#111111]'>
+          <div className='page-wrapper w-full '>
             {!state.isAuthenticated
               ? renderRoutes('none')
               : renderRoutes(state.role)}
@@ -48,3 +49,26 @@ function Main() {
 }
 
 export default Main
+
+{
+  /* <div className='page-wrapper w-full py-10 px-5 bg-[#111111]'>
+            {!state.isAuthenticated
+              ? (renderRoutes('none'))
+              : (renderRoutes(state.role))}
+          </div> */
+}
+
+// {
+//   !state.isAuthenticated ? (
+//     <Routes>
+//       <Route path='/*' element={<Navigate to='/' replace />}></Route>
+//     </Routes>
+//   ) : (
+//     <>
+//       {renderRoutes(state.role)}
+//       <Routes>
+//         <Route path='/*' element={<Navigate to='/admin/dashboard' replace />} />
+//       </Routes>
+//     </>
+//   )
+// }

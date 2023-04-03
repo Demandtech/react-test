@@ -22,8 +22,7 @@ export default function MkdSDK() {
     }
     const header = {
       'Content-Type': 'application/json',
-      'x-project':
-        'cmVhY3R0YXNrOmQ5aGVkeWN5djZwN3p3OHhpMzR0OWJtdHNqc2lneTV0Nw==',
+      'x-project': base64Encode,
     }
     try {
       const loginResult = await fetch(this._baseurl + '/v2/api/lambda/login', {
@@ -87,7 +86,7 @@ export default function MkdSDK() {
           payload.limit = 10
         }
         const paginateResult = await fetch(
-          this._baseurl + `/v1/api/rest/${this._table}/${method}`,
+          this._baseurl + `/v1/api/rest/video/${method}`,
           {
             method: 'post',
             headers: header,

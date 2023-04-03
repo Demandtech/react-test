@@ -5,10 +5,10 @@ export const AuthContext = React.createContext()
 const token = localStorage.getItem('token')
 const role = localStorage.getItem('role')
 const initialState = {
-  isAuthenticated: !! token,
+  isAuthenticated: null,
   user: null,
-  token: token ? token : null,
-  role: role ? role : null,
+  token: null,
+  role: null,
 }
 
 const reducer = (state, action) => {
@@ -61,7 +61,7 @@ const AuthProvider = ({ children }) => {
       }
     }
     checkToken(role)
-  }, [])
+  }, [state.token])
 
   return (
     <AuthContext.Provider
